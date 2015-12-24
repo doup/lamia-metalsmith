@@ -1,7 +1,9 @@
 'use strict';
 
+var assign       = require('lodash.assign');
 var clearRequire = require('clear-require');
-var config = require('./index').config;
+var config       = require('./index').config;
+var noop         = function () {};
 
 var Metalsmith    = require('metalsmith');
 var branch        = require('metalsmith-branch');
@@ -16,7 +18,6 @@ var multiLanguage = require('metalsmith-multi-language');
 var permalinks    = require('metalsmith-permalinks');
 var redirect      = require('metalsmith-redirect');
 var slug          = require('metalsmith-slug');
-var noop          = function () {};
 
 // Lamia plugins
 var pictures   = require('./plugins').pictures;
@@ -87,7 +88,7 @@ module.exports = function metalsmithBuild(config, done) {
 
     // Render with templates
     ms.use(mingo())
-    ms.metadata(viewHelpers)
+    ms.metadata(assign((project.viewHelpers || noop)(config) || {}, viewHelpers))
     ms.use(layouts({
         engine:    'jade',
         directory: config.paths.source +'templates'
