@@ -13,7 +13,7 @@ function LamiaRegistry(baseDir) {
 
     // Config
     try {
-        module.exports.config = config = yaml.safeLoad(fs.readFileSync(`${baseDir}/config.yml`, 'utf8'));
+        config = yaml.safeLoad(fs.readFileSync(`${baseDir}/config.yml`, 'utf8'));
     } catch (e) {
         console.log(e);
     }
