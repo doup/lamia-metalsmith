@@ -5,15 +5,16 @@ var argv = require('minimist')(process.argv.slice(2));
 var yaml = require('js-yaml');
 var path = require('path');
 var util = require('util');
-var DefaultRegistry = require('undertaker-registry');
+var prettyjson = require('prettyjson');
+var Registry = require('undertaker-registry');
 var config;
 
-function LamiaRegistry(baseDir) {
-    DefaultRegistry.call(this);
+function LamiaRegistry(projectDir) {
+    Registry.call(this);
 
     // Config
     try {
-        config = yaml.safeLoad(fs.readFileSync(`${baseDir}/config.yml`, 'utf8'));
+        config = yaml.safeLoad(fs.readFileSync(`${projectDir}/lamia/config.yml`, 'utf8'));
     } catch (e) {
         console.log(e);
     }
@@ -24,7 +25,8 @@ function LamiaRegistry(baseDir) {
         config.env = argv.env ? argv.env : 'dev';
     }
 
-    config.paths = { base: require('path').normalize(baseDir + '/../') }
+    config.paths = {};
+    config.paths.base = projectDir;
     config.paths.assets = path.join(config.paths.base, 'assets/');
     config.paths.content = path.join(config.paths.base, 'content/');
     config.paths.build = path.join(config.paths.base, '.build/');
@@ -32,10 +34,14 @@ function LamiaRegistry(baseDir) {
     config.paths.source = path.join(config.paths.base, 'lamia/source/');
     config.paths.project_metalsmith = path.join(config.paths.base, 'lamia/source/metalsmith.js');
 
+    console.log();
+    console.log(prettyjson.render(config.paths));
+    console.log();
+
     this.config = config;
 }
 
-util.inherits(LamiaRegistry, DefaultRegistry);
+util.inherits(LamiaRegistry, Registry);
 
 LamiaRegistry.prototype.init = function init(gulp) {
     require('./gulp')(gulp, this.config);

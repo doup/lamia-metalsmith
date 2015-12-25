@@ -2,7 +2,6 @@
 
 var assign       = require('lodash.assign');
 var clearRequire = require('clear-require');
-var config       = require('./index').config;
 var noop         = function () {};
 
 var Metalsmith    = require('metalsmith');
@@ -20,19 +19,11 @@ var redirect      = require('metalsmith-redirect');
 var slug          = require('metalsmith-slug');
 
 // Lamia plugins
-var pictures   = require('./plugins').pictures;
-var showDrafts = require('./plugins').showDrafts;
+var pictures = require('./plugins').pictures;
 
 // Markdown-it config
 var markdown = markdown({ linkify: true, typographer: true })
     .use(require('markdown-it-footnote'));
-
-var viewHelpers = {
-    nl2br: str => str.replace(/(\r\n|\n\r|\r|\n)/g, '<br/>'),
-    config: config,
-    markdown: str => markdown.parser.render(str),
-    isoDate: date => date.toISOString().substr(0, 10),
-};
 
 module.exports = function metalsmithBuild(config, done) {
     clearRequire(config.paths.project_metalsmith);
@@ -87,6 +78,13 @@ module.exports = function metalsmithBuild(config, done) {
     }
 
     // Render with templates
+    var viewHelpers = {
+        nl2br: str => str.replace(/(\r\n|\n\r|\r|\n)/g, '<br/>'),
+        env: config.env,
+        markdown: str => markdown.parser.render(str),
+        isoDate: date => date.toISOString().substr(0, 10),
+    };
+
     ms.use(mingo())
     ms.metadata(assign((project.viewHelpers || noop)(config) || {}, viewHelpers))
     ms.use(layouts({

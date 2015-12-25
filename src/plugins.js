@@ -41,17 +41,3 @@ module.exports.pictures = function (picSizes) {
         done();
     };
 };
-
-module.exports.setProperty = function (prop, value) {
-    return function setProperty(files, ms, done) {
-        for (var file in files) {
-            if (typeof(value) === 'function') {
-                files[file][prop] = value(file, files[file], ms);
-            } else {
-                files[file][prop] = value;
-            }
-        }
-
-        done();
-    };
-};
