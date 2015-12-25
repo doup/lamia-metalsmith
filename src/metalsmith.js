@@ -3,6 +3,7 @@
 var assign       = require('lodash.assign');
 var clearRequire = require('clear-require');
 var noop         = function () {};
+var path         = require('path');
 
 var Metalsmith    = require('metalsmith');
 var branch        = require('metalsmith-branch');
@@ -34,7 +35,7 @@ module.exports = function metalsmithBuild(config, done) {
     var ms = Metalsmith(config.paths.base);
 
     ms.source('content')
-    ms.destination('lamia/.pre-build/metalsmith')
+    ms.destination(path.join(config.paths.pre_build, 'metalsmith'))
     ms.clean(false)
     ms.use(ignore(['.DS_Store', '*/.DS_Store']))
 
@@ -60,7 +61,7 @@ module.exports = function metalsmithBuild(config, done) {
     ms.use(i18n({
         default:   config.i18n.default,
         locales:   config.i18n.locales,
-        directory: config.paths.source +'i18n'
+        directory: path.join(config.paths.source, 'i18n')
     }))
     ms.use(slug({ patterns: ['*.md'], lower: true }))
     ms.use(markdown)
@@ -89,7 +90,7 @@ module.exports = function metalsmithBuild(config, done) {
     ms.metadata(assign((project.viewHelpers || noop)(config) || {}, viewHelpers))
     ms.use(layouts({
         engine:    'jade',
-        directory: config.paths.source +'templates'
+        directory: path.join(config.paths.source, 'templates')
     }))
 
     // Redirections

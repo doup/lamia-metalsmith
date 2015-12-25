@@ -7,17 +7,17 @@ Lamia: Opinionated static site generator template built on top of Metalsmith and
 It uses GraphicsMagick.
 
 TODO:
-- [ ] build eta pre-build, tmp karpetan baten jarri, bestela dropboxen jarri ezkeo gero movidak eongoituk.
 - [ ] assets/images/social tema hobeto pentsatu, zentzua zekak? igual Markdown+Template helper batzuk gehitu ber dizkit?
-- [ ] User eta Developer experientziak separatu: /content eta /lamia
+- [ ] Deploy: FTP, Amazon S3, GitHub pages
 - [ ] metalsmith-benchmark. Metalsmith.use() wrapper bat gehitu.
-- [ ] markdownetan ##title => ## title
-- [ ] postprocess: unorphan, hyphenate, html-minifier
 - [ ] RSS
 - [ ] sitemap.xml
-- [ ] Deploy: FTP, s3, github pages
-- [ ] setProperty npm package baten bihurtu
-- [ ] viewHelpers integratu
+- [ ] yo generators: `lamia`, `lamia-blog` (composed?)
+- [ ] CLI
+- [ ] GUI
+- [X] build eta pre-build, tmp karpetan baten jarri, bestela dropboxen jarri ezkeo gero movidak eongoituk.
+- [X] viewHelpers integratu
+- [X] User eta Developer experientziak separatu: /content eta /lamia
 - [X] Hooks.
 - [X] showDrafts kendu, ta horren berren if bat erabili. Show drafts-ek propiedadia aldatzen bait dik.
 - [X] URLs
@@ -26,3 +26,8 @@ TODO:
 - [X] fingerprint bueltan jarri layout.jade-en
 - [X] pipeline eta metalsmith hobeto separatu? /metalsmith.js edo /metalsmith/helpers.js|build.js|plugins.js
 - [X] config.yml
+
+TODO PROJECT:
+- [ ] setProperty npm package baten bihurtu
+- [ ] markdownetan ##title => ## title
+- [ ] postprocess: unorphan, hyphenate, html-minifier

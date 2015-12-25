@@ -11,6 +11,7 @@ var imagemin         = require('gulp-imagemin');
 var imageResize      = require('gulp-image-resize');
 var merge            = require('merge-stream');
 var uglify           = require('gulp-uglify');
+var path             = require('path');
 var rename           = require('gulp-rename');
 var rev              = require('gulp-rev');
 var revReplace       = require('gulp-rev-replace');
@@ -19,12 +20,15 @@ var sass             = require('gulp-sass');
 process.on('uncaughtException', console.log);
 
 module.exports = function (gulp, config) {
+    function buildPath(paths) { return path.join.apply(path, [config.paths.build].concat(paths)); }
+    function prebuildPath(paths) { return path.join.apply(path, [config.paths.pre_build].concat(paths)); }
+
     gulp.task('clean:pre-build', () => {
-        return del(['.pre-build']);
+        return del(config.paths.pre_build, { force: true });
     });
 
     gulp.task('clean:build', () => {
-        return del(['build']);
+        return del(config.paths.build, { force: true });
     });
 
     gulp.task('metalsmith', (done) => {
@@ -40,7 +44,7 @@ module.exports = function (gulp, config) {
                 gulp.src(config.assets.js[target])
                     .pipe(concat(target))
                     .pipe(uglify())
-                    .pipe(gulp.dest('.pre-build/js'))
+                    .pipe(gulp.dest(prebuildPath(['js'])))
             );
         }
 
@@ -54,7 +58,7 @@ module.exports = function (gulp, config) {
                 includePaths: config.assets.sass_include_paths,
             }).on('error', sass.logError))
             .pipe(autoprefixer())
-            .pipe(gulp.dest('.pre-build/css'));
+            .pipe(gulp.dest(prebuildPath(['css'])));
     });
 
     // Copy non image assets
@@ -63,13 +67,13 @@ module.exports = function (gulp, config) {
 
         streams.push(
             gulp.src(['source/assets/**/*', '../assets/**/*', '!**/*.{svg,jpg,jpeg,png,gif}'])
-                .pipe(gulp.dest('.pre-build/assets'))
+                .pipe(gulp.dest(prebuildPath(['assets'])))
         );
 
         for (var glob in config.assets.copy) {
             streams.push(
                 gulp.src(glob)
-                    .pipe(gulp.dest(`.pre-build/assets/${config.assets.copy[glob]}`))
+                    .pipe(gulp.dest(prebuildPath(['assets', config.assets.copy[glob]])))
             );
         }
 
@@ -100,7 +104,7 @@ module.exports = function (gulp, config) {
                         .pipe(imageResize(cfg))
                         .pipe(rename(function (path) { path.basename += '_'+ key; }))
                         .pipe(imagemin())
-                        .pipe(gulp.dest('.pre-build/assets/images/pics'))
+                        .pipe(gulp.dest(prebuildPath(['assets/images/pics'])))
                 );
             })(key, cfg);
         }
@@ -118,7 +122,7 @@ module.exports = function (gulp, config) {
                     .pipe(imageResize({ upscale: true, crop: true, width: width, height: height, format: 'jpg', quality: 0.75 }))
                     .pipe(rename(function (path) { path.basename += '_'+ key; }))
                     .pipe(imagemin())
-                    .pipe(gulp.dest('.pre-build/assets/images/social'))
+                    .pipe(gulp.dest(prebuildPath(['assets/images/social'])))
             )
         }
 
@@ -138,31 +142,31 @@ module.exports = function (gulp, config) {
 
         return gulp.src(glob)
             .pipe(imagemin())
-            .pipe(gulp.dest('.pre-build/assets'));
+            .pipe(gulp.dest(prebuildPath(['assets'])));
     });
 
     gulp.task('assets:images', gulp.parallel('assets:images:pics', 'assets:images:social', 'assets:images:other'));
 
     gulp.task('revision', () => {
-        return gulp.src(['.pre-build/js/*.js', '.pre-build/css/*.css'])
+        return gulp.src([prebuildPath(['js/*.js']), prebuildPath(['css/*.css'])])
             .pipe(rev())
-            .pipe(gulp.dest('build/assets'))
+            .pipe(gulp.dest(buildPath(['assets'])))
             .pipe(rev.manifest({ base: 'assets' }))
-            .pipe(gulp.dest('build/assets'));
+            .pipe(gulp.dest(buildPath(['assets'])));
     });
 
     gulp.task('revision:replace', () => {
-        var manifest = gulp.src('build/rev-manifest.json');
+        var manifest = gulp.src(buildPath(['rev-manifest.json']));
 
-        return gulp.src('.pre-build/metalsmith/**/*.html')
+        return gulp.src(prebuildPath(['metalsmith/**/*.html']))
             .pipe(revReplace({ manifest: manifest }))
-            .pipe(gulp.dest('build'));
+            .pipe(gulp.dest(config.paths.build));
     });
 
     // Copy .pre-build/assets to build/assets
     gulp.task('build:copy', () => {
-        return gulp.src('.pre-build/assets/**/*')
-            .pipe(gulp.dest('build/assets'));
+        return gulp.src(prebuildPath(['assets/**/*']))
+            .pipe(gulp.dest(buildPath(['assets'])));
     });
 
     gulp.task('build:post', gulp.series('revision', 'revision:replace', 'build:copy'));
@@ -182,7 +186,7 @@ module.exports = function (gulp, config) {
         browserSync({
             notify: true,
             server: {
-                baseDir: './build'
+                baseDir: config.paths.build
             }
         }, done);
     });

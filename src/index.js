@@ -25,13 +25,17 @@ function LamiaRegistry(projectDir) {
         config.env = argv.env ? argv.env : 'dev';
     }
 
+    // Generate project hash for tmp file from project path
+    config.project_hash = require('crypto').createHash('md5').update(projectDir).digest('hex');
+
     config.paths = {};
     config.paths.base = projectDir;
-    config.paths.assets = path.join(config.paths.base, 'assets/');
-    config.paths.content = path.join(config.paths.base, 'content/');
-    config.paths.build = path.join(config.paths.base, '.build/');
-    config.paths.pre_build = path.join(config.paths.base, '.pre-build/');
-    config.paths.source = path.join(config.paths.base, 'lamia/source/');
+    config.paths.tmp = path.join(require('os').homedir(), '.lamia', config.project_hash);
+    config.paths.assets = path.join(config.paths.base, 'assets');
+    config.paths.content = path.join(config.paths.base, 'content');
+    config.paths.build = path.join(config.paths.tmp, 'build');
+    config.paths.pre_build = path.join(config.paths.tmp, 'pre-build');
+    config.paths.source = path.join(config.paths.base, 'lamia/source');
     config.paths.project_metalsmith = path.join(config.paths.base, 'lamia/source/metalsmith.js');
 
     console.log();
