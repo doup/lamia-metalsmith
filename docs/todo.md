@@ -7,11 +7,9 @@ Lamia: Opinionated static site generator template built on top of Metalsmith and
 It uses GraphicsMagick.
 
 TODO:
+- [ ] Deploy: FTP+rsync, SSH+rsync, Amazon S3+sync, GitHub pages
 - [ ] assets/images/social tema hobeto pentsatu, zentzua zekak? igual Markdown+Template helper batzuk gehitu ber dizkit?
-- [ ] Deploy: FTP, Amazon S3, GitHub pages
 - [ ] metalsmith-benchmark. Metalsmith.use() wrapper bat gehitu.
-- [ ] RSS
-- [ ] sitemap.xml
 - [ ] yo generators: `lamia`, `lamia-blog` (composed?)
 - [ ] CLI
 - [ ] GUI
@@ -31,3 +29,5 @@ TODO PROJECT:
 - [ ] setProperty npm package baten bihurtu
 - [ ] markdownetan ##title => ## title
 - [ ] postprocess: unorphan, hyphenate, html-minifier
+- [ ] RSS
+- [ ] sitemap.xml
