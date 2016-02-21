@@ -4,8 +4,8 @@ var autoprefixer     = require('gulp-autoprefixer');
 var clearRequire     = require('clear-require');
 var concat           = require('gulp-concat');
 var del              = require('del');
-//var awspublish       = require('gulp-awspublish');
-//var awspublishRouter = require("gulp-awspublish-router");
+var awspublish       = require('gulp-awspublish');
+var awspublishRouter = require('gulp-awspublish-router');
 var browserSync      = require('browser-sync');
 var imagemin         = require('gulp-imagemin');
 var imageResize      = require('gulp-image-resize');
@@ -209,8 +209,43 @@ module.exports = function (gulp, config) {
         gulp.watch('source/scss/**/*', gulp.series('assets:css', 'build:post', 'serve:reload'));
     });
 
+    if (config.deploy.type == 's3') {
+        gulp.task('upload', function () {
+            // create a new publisher
+            var publisher = awspublish.create(config.deploy.config);
+
+            return gulp.src('**/*', { cwd: config.paths.build })
+                .pipe(awspublishRouter({
+                    cache:  { cacheTime: 1800 }, // cache for 30 minutes by default
+                    routes: {
+                        // don't modify original key. this is the default
+                        // use gzip for assets that benefit from it
+                        // cache static assets for 2 years
+                        "^assets/(?:.+)\\.(?:js|css|svg|ttf)$": {
+                            key: "$&",
+                            gzip: true,
+                            cacheTime: 630720000
+                        },
+                        // cache static assets for 2 years
+                        "^assets/.+$": { cacheTime: 630720000 },
+                        "^.+\\.html": { gzip: true },
+                        // pass-through for anything that wasn't matched by routes above,
+                        // to be uploaded with default options
+                        "^.+$": "$&"
+                    }
+                }))
+                .pipe(publisher.publish())
+                .pipe(publisher.sync())
+                .pipe(publisher.cache())
+                .pipe(awspublish.reporter());
+        });
+    } else {
+        gulp.task('upload', () => {});
+    }
+
     gulp.task('serve', gulp.series('clean:pre-build', 'build:project', 'serve:server', 'serve:watch'));
     gulp.task('build', gulp.series('clean:pre-build', 'build:project'));
+    gulp.task('deploy', gulp.series('build', 'upload'));
 
     gulp.task('default', gulp.series('serve'));
 };
@@ -232,35 +267,3 @@ if (!isDebug) {
     .use(htmlMinifier())
 }
 */
-
-// gulp.task('upload', () => {
-//     // create a new publisher
-//     var publisher = awspublish.create(config.s3);
-//
-//     return gulp.src('**/*', { cwd: './build/' })
-//         .pipe(awspublishRouter({
-//             cache:  { cacheTime: 1800 }, // cache for 30 minutes by default
-//             routes: {
-//                 // don't modify original key. this is the default
-//                 // use gzip for assets that benefit from it
-//                 // cache static assets for 2 years
-//                 "^assets/(?:.+)\\.(?:js|css|svg|ttf)$": {
-//                     key: "$&",
-//                     gzip: true,
-//                     cacheTime: 630720000
-//                 },
-//                 // cache static assets for 2 years
-//                 "^assets/.+$": { cacheTime: 630720000 },
-//                 "^.+\\.html": { gzip: true },
-//                 // pass-through for anything that wasn't matched by routes above,
-//                 // to be uploaded with default options
-//                 "^.+$": "$&"
-//             }
-//         }))
-//         .pipe(publisher.publish())
-//         .pipe(publisher.sync())
-//         .pipe(publisher.cache())
-//         .pipe(awspublish.reporter());
-// });
-
-// gulp.task('deploy', gulp.series('build', 'upload'));

@@ -9,7 +9,7 @@ var prettyjson = require('prettyjson');
 var Registry = require('undertaker-registry');
 var config;
 
-function LamiaRegistry(projectDir) {
+function LamiaRegistry(projectDir, deployConfig) {
     Registry.call(this);
 
     // Config
@@ -24,6 +24,9 @@ function LamiaRegistry(projectDir) {
     } else {
         config.env = argv.env ? argv.env : 'dev';
     }
+
+    // Deploy options
+    config.deploy = deployConfig || { type: false };
 
     // Generate project hash for tmp file from project path
     config.project_hash = require('crypto').createHash('md5').update(projectDir).digest('hex');

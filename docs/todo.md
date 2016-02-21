@@ -7,12 +7,16 @@ Lamia: Opinionated static site generator template built on top of Metalsmith and
 It uses GraphicsMagick.
 
 IMPORTANT:
-- [ ] Deploy: FTP+rsync, SSH+rsync, Amazon S3+sync, GitHub pages
+- [ ] Deploy:
+    - [X] Amazon S3+sync
+    - [ ] FTP+rsync
+    - [ ] SSH+rsync
+    - [ ] GitHub pages
 - [X] assets/images/social tema hobeto pentsatu, zentzua zekak?
 - [X] lamia/source/assets => public izena jarri. Ta artxibuak raiz-ea kopiatu. (favicon.ico tema soluzionatzeko)
 
 NEXT:
-- [ ] Meta/Social images temantzat Mixin/Helper batzuk sortu?
+- [ ] Meta/SocialImages/Disqus/Analytics temantzat Mixin/Helper batzuk sortu?
 - [ ] console.log => debug = require('debug')('lamia')
 - [ ] reload on config.yml change
 - [ ] yo generators: `lamia`, `lamia-blog` (composed?)
