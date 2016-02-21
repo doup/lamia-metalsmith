@@ -34,10 +34,10 @@ module.exports = function metalsmithBuild(config, done) {
     // INIT
     var ms = Metalsmith(config.paths.base);
 
-    ms.source('content')
-    ms.destination(path.join(config.paths.pre_build, 'metalsmith'))
-    ms.clean(false)
-    ms.use(ignore(['.DS_Store', '*/.DS_Store']))
+    ms.source('content');
+    ms.destination(path.join(config.paths.pre_build, 'metalsmith'));
+    ms.clean(false);
+    ms.use(ignore(['.DS_Store', '*/.DS_Store']));
 
     // Multi-language
     // This must go before drafts, since the secondary locale
@@ -46,7 +46,7 @@ module.exports = function metalsmithBuild(config, done) {
     ms.use(multiLanguage({
         default: config.i18n.default,
         locales: config.i18n.locales
-    }))
+    }));
 
     // Drafts handling
     if (config.env != 'dev') {
@@ -57,14 +57,14 @@ module.exports = function metalsmithBuild(config, done) {
     (project.preMarkdown || noop)(ms, config);
 
     // RENDER MARKDOWN
-    ms.use(filenameDate())
+    ms.use(filenameDate());
     ms.use(i18n({
         default:   config.i18n.default,
         locales:   config.i18n.locales,
         directory: path.join(config.paths.source, 'i18n')
-    }))
-    ms.use(slug({ patterns: ['*.md'], lower: true }))
-    ms.use(markdown)
+    }));
+    ms.use(slug({ patterns: ['*.md'], lower: true }));
+    ms.use(markdown);
     ms.use(pictures(config.assets.pic_sizes));
 
     // POST MARKDOWN HOOK
@@ -86,12 +86,12 @@ module.exports = function metalsmithBuild(config, done) {
         isoDate: date => date.toISOString().substr(0, 10),
     };
 
-    ms.use(mingo())
-    ms.metadata(assign((project.viewHelpers || noop)(config) || {}, viewHelpers))
+    ms.use(mingo());
+    ms.metadata(assign((project.viewHelpers || noop)(config) || {}, viewHelpers));
     ms.use(layouts({
         engine:    'jade',
         directory: path.join(config.paths.source, 'templates')
-    }))
+    }));
 
     // Redirections
     if (config.redirect) {
