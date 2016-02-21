@@ -93,13 +93,13 @@ module.exports = function metalsmithBuild(config, done) {
         directory: path.join(config.paths.source, 'templates')
     }));
 
+    // POST LAYOUT HOOK
+    (project.postLayout || noop)(ms, config);
+
     // Redirections
     if (config.redirect) {
         ms.use(redirect(config.redirect));
     }
-
-    // POST LAYOUT HOOK
-    (project.postLayout || noop)(ms, config);
 
     // BUILD
     ms.build(done);
