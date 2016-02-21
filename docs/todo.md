@@ -6,13 +6,24 @@ Lamia: Opinionated static site generator template built on top of Metalsmith and
 
 It uses GraphicsMagick.
 
-TODO:
+IMPORTANT:
 - [ ] Deploy: FTP+rsync, SSH+rsync, Amazon S3+sync, GitHub pages
-- [ ] assets/images/social tema hobeto pentsatu, zentzua zekak? igual Markdown+Template helper batzuk gehitu ber dizkit?
-- [ ] metalsmith-benchmark. Metalsmith.use() wrapper bat gehitu.
+- [X] assets/images/social tema hobeto pentsatu, zentzua zekak?
+- [X] lamia/source/assets => public izena jarri. Ta artxibuak raiz-ea kopiatu. (favicon.ico tema soluzionatzeko)
+
+NEXT:
+- [ ] Meta/Social images temantzat Mixin/Helper batzuk sortu?
+- [ ] console.log => debug = require('debug')('lamia')
+- [ ] reload on config.yml change
 - [ ] yo generators: `lamia`, `lamia-blog` (composed?)
+- [ ] gulp tasken izenak eta pathei koherentzi gehio ematen saiatu
+
+TODO:
+- [ ] metalsmith-benchmark. Metalsmith.use() wrapper bat gehitu.
 - [ ] CLI
 - [ ] GUI
+
+DONE:
 - [X] build eta pre-build, tmp karpetan baten jarri, bestela dropboxen jarri ezkeo gero movidak eongoituk.
 - [X] viewHelpers integratu
 - [X] User eta Developer experientziak separatu: /content eta /lamia
@@ -28,6 +39,6 @@ TODO:
 TODO PROJECT:
 - [ ] setProperty npm package baten bihurtu
 - [ ] markdownetan ##title => ## title
-- [ ] postprocess: unorphan, hyphenate, html-minifier
+- [ ] postprocess (plugins?): unorphan, hyphenate, html-minifier
 - [ ] RSS
 - [ ] sitemap.xml
