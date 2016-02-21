@@ -80,10 +80,10 @@ module.exports = function metalsmithBuild(config, done) {
 
     // Render with templates
     var viewHelpers = {
-        nl2br: str => str.replace(/(\r\n|\n\r|\r|\n)/g, '<br/>'),
-        env: config.env,
+        nl2br:    str => str.replace(/(\r\n|\n\r|\r|\n)/g, '<br/>'),
+        env:      config.env,
         markdown: str => markdown.parser.render(str),
-        isoDate: date => date.toISOString().substr(0, 10),
+        isoDate:  date => date.toISOString().substr(0, 10),
     };
 
     ms.use(mingo());
