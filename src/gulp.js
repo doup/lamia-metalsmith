@@ -66,14 +66,14 @@ module.exports = function (gulp, config) {
         var streams = [];
 
         streams.push(
-            gulp.src(['source/assets/**/*', '../assets/**/*', '!**/*.{svg,jpg,jpeg,png,gif}'])
-                .pipe(gulp.dest(prebuildPath(['assets'])))
+            gulp.src(['../assets/**/*', '!**/*.{svg,jpg,jpeg,png,gif}'])
+                .pipe(gulp.dest(prebuildPath(['public/assets'])))
         );
 
         for (var glob in config.assets.copy) {
             streams.push(
                 gulp.src(glob)
-                    .pipe(gulp.dest(prebuildPath(['assets', config.assets.copy[glob]])))
+                    .pipe(gulp.dest(prebuildPath(['public/assets', config.assets.copy[glob]])))
             );
         }
 
@@ -104,7 +104,7 @@ module.exports = function (gulp, config) {
                         .pipe(imageResize(cfg))
                         .pipe(rename(function (path) { path.basename += '_'+ key; }))
                         .pipe(imagemin())
-                        .pipe(gulp.dest(prebuildPath(['assets/images/pics'])))
+                        .pipe(gulp.dest(prebuildPath(['public/assets/images/pics'])))
                 );
             })(key, cfg);
         }
@@ -122,7 +122,7 @@ module.exports = function (gulp, config) {
                     .pipe(imageResize({ upscale: true, crop: true, width: width, height: height, format: 'jpg', quality: 0.75 }))
                     .pipe(rename(function (path) { path.basename += '_'+ key; }))
                     .pipe(imagemin())
-                    .pipe(gulp.dest(prebuildPath(['assets/images/social'])))
+                    .pipe(gulp.dest(prebuildPath(['public/assets/images/social'])))
             )
         }
 
@@ -134,7 +134,6 @@ module.exports = function (gulp, config) {
 
     gulp.task('assets:images:other', (done) => {
         var glob = [
-            'source/assets/**/*.{svg,jpg,jpeg,png,gif}',
             '../assets/**/*.{svg,jpg,jpeg,png,gif}',
             '!../assets/images/pics/**/*',
             '!../assets/images/social/**/*',
@@ -142,10 +141,23 @@ module.exports = function (gulp, config) {
 
         return gulp.src(glob)
             .pipe(imagemin())
-            .pipe(gulp.dest(prebuildPath(['assets'])));
+            .pipe(gulp.dest(prebuildPath(['public/assets'])));
     });
 
     gulp.task('assets:images', gulp.parallel('assets:images:pics', 'assets:images:social', 'assets:images:other'));
+
+    gulp.task('public:images', (done) => {
+        return gulp.src('source/public/**/*.{svg,jpg,jpeg,png,gif}')
+            .pipe(imagemin())
+            .pipe(gulp.dest(prebuildPath(['public'])));
+    });
+
+    gulp.task('public:files', () => {
+        return gulp.src(['source/public/**/*', '!**/*.{svg,jpg,jpeg,png,gif}'])
+            .pipe(gulp.dest(prebuildPath(['public'])));
+    });
+
+    gulp.task('public', gulp.parallel('assets:js', 'assets:css', 'assets:copy', 'assets:images', 'public:images', 'public:files'));
 
     gulp.task('revision', () => {
         return gulp.src([prebuildPath(['js/*.js']), prebuildPath(['css/*.css'])])
@@ -165,8 +177,8 @@ module.exports = function (gulp, config) {
 
     // Copy .pre-build/assets to build/assets
     gulp.task('build:copy', () => {
-        return gulp.src(prebuildPath(['assets/**/*']))
-            .pipe(gulp.dest(buildPath(['assets'])));
+        return gulp.src(prebuildPath(['public/**/*']))
+            .pipe(gulp.dest(config.paths.build));
     });
 
     gulp.task('build:post', gulp.series('revision', 'revision:replace', 'build:copy'));
@@ -174,7 +186,7 @@ module.exports = function (gulp, config) {
     gulp.task('build:project', gulp.series(
         'clean:build',
         'metalsmith',
-        gulp.parallel('assets:js', 'assets:css', 'assets:copy', 'assets:images'),
+        'public',
         'build:post'
     ));
 
