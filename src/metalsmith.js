@@ -80,10 +80,14 @@ module.exports = function metalsmithBuild(config, done) {
 
     // Render with templates
     var viewHelpers = {
-        nl2br:    str => str.replace(/(\r\n|\n\r|\r|\n)/g, '<br/>'),
-        env:      config.env,
-        markdown: str => markdown.parser.render(str),
-        isoDate:  date => date.toISOString().substr(0, 10),
+        nl2br:       str => str.replace(/(\r\n|\n\r|\r|\n)/g, '<br/>'),
+        env:         config.env,
+        markdown:    str => markdown.parser.render(str),
+        isoDate:     date => date.toISOString().substr(0, 10),
+        socialImage: (img, size) => {
+            size = size || 'large';
+            return `/assets/images/social/${img}_${size}.jpg`;
+        },
     };
 
     ms.use(mingo());

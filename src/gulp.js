@@ -126,8 +126,8 @@ module.exports = function (gulp, config) {
             )
         }
 
-        addSize('slarge', 1200, 630);
-        addSize('smedium', 560, 300);
+        addSize('large', 1200, 630);
+        addSize('medium', 560, 300);
 
         return merge.apply(null, streams);
     });
