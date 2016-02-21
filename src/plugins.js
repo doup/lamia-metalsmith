@@ -24,7 +24,7 @@ module.exports.pictures = function (picSizes) {
                         src = src.replace(ext, '_'+ match[1] +'.jpg');
 
                         if (picSizes[match[1]].class) {
-                            $(this).parent().addClass(picSizes[match[1]].class);
+                            $(this).parent().addClass('lamia-image '+ picSizes[match[1]].class);
                         }
 
                         $(this).attr('src', src);
