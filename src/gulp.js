@@ -67,7 +67,7 @@ module.exports = function (gulp, config) {
         var streams = [];
 
         streams.push(
-            gulp.src(['../assets/**/*', '!**/*.{svg,jpg,jpeg,png,gif}'])
+            gulp.src(['../assets/**/*', '!../assets/**/*.{svg,jpg,jpeg,png,gif}'])
                 .pipe(gulp.dest(prebuildPath(['public/assets'])))
         );
 
