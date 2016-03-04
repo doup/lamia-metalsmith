@@ -7,6 +7,7 @@ var del              = require('del');
 var awspublish       = require('gulp-awspublish');
 var awspublishRouter = require('gulp-awspublish-router');
 var browserSync      = require('browser-sync');
+var ghPages          = require('gulp-gh-pages');
 var imagemin         = require('gulp-imagemin');
 var imageResize      = require('gulp-image-resize');
 var merge            = require('merge-stream');
@@ -212,7 +213,14 @@ module.exports = function (gulp, config) {
     if (config.deploy.type == 's3') {
         gulp.task('upload', function () {
             // create a new publisher
-            var publisher = awspublish.create(config.deploy.config);
+            var publisher = awspublish.create({
+                "params": {
+                    "Bucket": config.deploy.config.bucket
+                },
+                "accessKeyId":     config.deploy.config.access_key_id,
+                "secretAccessKey": config.deploy.config.secret_access_key,
+                "region":          config.deploy.config.region
+            });
 
             return gulp.src('**/*', { cwd: config.paths.build })
                 .pipe(awspublishRouter({
@@ -239,6 +247,12 @@ module.exports = function (gulp, config) {
                 .pipe(publisher.cache())
                 .pipe(awspublish.reporter());
         });
+    } else if (config.deploy.type == 'gh-pages') {
+        gulp.task('upload', function () {
+            return gulp.src('**/*', { cwd: config.paths.build })
+                .pipe(ghPages());
+        });
+
     } else {
         gulp.task('upload', () => {});
     }

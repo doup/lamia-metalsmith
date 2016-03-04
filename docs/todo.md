@@ -9,9 +9,10 @@ It uses GraphicsMagick.
 IMPORTANT:
 - [ ] Deploy:
     - [X] Amazon S3+sync
+    - [ ] GitHub pages
+        - Base URL? http://grautonomia.github.io/web/ que funcione en local y en GitHub.
     - [ ] FTP+rsync
     - [ ] SSH+rsync
-    - [ ] GitHub pages
 - [X] assets/images/social tema hobeto pentsatu, zentzua zekak?
 - [X] lamia/source/assets => public izena jarri. Ta artxibuak raiz-ea kopiatu. (favicon.ico tema soluzionatzeko)
 
