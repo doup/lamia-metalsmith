@@ -1,6 +1,7 @@
 'use strict';
 
 var assign       = require('lodash.assign');
+var arrify       = require('arrify');
 var clearRequire = require('clear-require');
 var noop         = function () {};
 var path         = require('path');
@@ -14,6 +15,7 @@ var i18n          = require('metalsmith-i18n');
 var layouts       = require('metalsmith-layouts');
 var markdown      = require('metalsmith-markdownit');
 var mingo         = require('metalsmith-mingo');
+var multimatch    = require('multimatch');
 var multiLanguage = require('metalsmith-multi-language');
 var permalinks    = require('metalsmith-permalinks');
 var redirect      = require('metalsmith-redirect');
@@ -29,7 +31,10 @@ var markdown = markdown({ linkify: true, typographer: true })
 module.exports = function metalsmithBuild(config, done) {
     clearRequire(config.paths.project_metalsmith);
 
-    var project = require(config.paths.project_metalsmith);
+    var dataFilesGlob = arrify(config.data_files).map(f => '!'+ f);
+    var markdownGlob  = ['**/*.md'].concat(dataFilesGlob);
+    var layoutGlob    = ['**/*'].concat(dataFilesGlob);
+    var project       = require(config.paths.project_metalsmith);
 
     // INIT
     var ms = Metalsmith(config.paths.base);
@@ -64,7 +69,7 @@ module.exports = function metalsmithBuild(config, done) {
         directory: path.join(config.paths.source, 'i18n')
     }));
     ms.use(slug({ patterns: ['*.md'], lower: true }));
-    ms.use(markdown);
+    ms.use(branch((file) => !!multimatch(file, markdownGlob).length).use(markdown))
     ms.use(pictures(config.assets.pic_sizes));
 
     // POST MARKDOWN HOOK
@@ -81,9 +86,15 @@ module.exports = function metalsmithBuild(config, done) {
     // Render with templates
     var viewHelpers = {
         nl2br:       str => str.replace(/(\r\n|\n\r|\r|\n)/g, '<br/>'),
-        env:         config.env,
-        markdown:    str => markdown.parser.render(str),
+        config:      config,
         isoDate:     date => date.toISOString().substr(0, 10),
+        markdown: str => {
+            if (Buffer.isBuffer(str)) {
+                str = str.toString();
+            }
+
+            return markdown.parser.render(str)
+        },
         socialImage: (img, size) => {
             size = size || 'large';
             return `/assets/images/social/${img}_${size}.jpg`;
@@ -99,10 +110,13 @@ module.exports = function metalsmithBuild(config, done) {
 
     ms.use(mingo());
     ms.metadata(assign((project.viewHelpers || noop)(config) || {}, viewHelpers));
-    ms.use(layouts({
-        engine:    'jade',
-        directory: path.join(config.paths.source, 'templates')
-    }));
+    ms.use(
+        branch((file) => !!multimatch(file, layoutGlob).length)
+        .use(layouts({
+            engine:    'jade',
+            directory: path.join(config.paths.source, 'templates')
+        }))
+    );
 
     // POST LAYOUT HOOK
     (project.postLayout || noop)(ms, config);
