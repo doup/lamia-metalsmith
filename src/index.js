@@ -25,6 +25,8 @@ function LamiaRegistry(projectDir, deployConfig) {
         config.env = argv.env ? argv.env : 'dev';
     }
 
+    config.version = require('../package.json').version;
+
     // Deploy options
     config.deploy = deployConfig || { type: false };
 
