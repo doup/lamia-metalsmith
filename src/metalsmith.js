@@ -88,6 +88,13 @@ module.exports = function metalsmithBuild(config, done) {
             size = size || 'large';
             return `/assets/images/social/${img}_${size}.jpg`;
         },
+        url: (url) => {
+            if (config.env === 'dev') {
+                return url;
+            } else {
+                return config.base_url + url;
+            }
+        },
     };
 
     ms.use(mingo());
