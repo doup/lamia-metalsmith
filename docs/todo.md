@@ -6,24 +6,27 @@ Lamia: Opinionated static site generator template built on top of Metalsmith and
 
 It uses GraphicsMagick.
 
-IMPORTANT:
+TODO:
 - [ ] Deploy:
     - [X] Amazon S3+sync
     - [ ] GitHub pages
         - Base URL? http://grautonomia.github.io/web/ que funcione en local y en GitHub.
+        - Puede ser tambien en: http://grautonomia.github.io
     - [ ] FTP+rsync
     - [ ] SSH+rsync
+- [ ] config.yml mailan URLia i18n-eko aukera eon berko zian
+- [ ] Nik tuneautako paketiak berriro gehitu, adib.: `metalsmith-slug`
+- [ ] Watch debounce/throotle.
+- [ ] Meta/SocialImages/Disqus/Analytics temantzat Mixin/Helper batzuk sortu?
+- [ ] console.log => debug = require('debug')('lamia')
+- [ ] reload on config.yml change
+- [ ] gulp tasken izenak eta pathei koherentzi gehio ematen saiatu (si hace falta, oain etziok ondo?)
+- [X] No copiar las imagenes originales a `pics` y a `social`.
 - [X] assets/images/social tema hobeto pentsatu, zentzua zekak?
 - [X] lamia/source/assets => public izena jarri. Ta artxibuak raiz-ea kopiatu. (favicon.ico tema soluzionatzeko)
 
 NEXT:
-- [ ] Meta/SocialImages/Disqus/Analytics temantzat Mixin/Helper batzuk sortu?
-- [ ] console.log => debug = require('debug')('lamia')
-- [ ] reload on config.yml change
 - [ ] yo generators: `lamia`, `lamia-blog` (composed?)
-- [ ] gulp tasken izenak eta pathei koherentzi gehio ematen saiatu
-
-TODO:
 - [ ] metalsmith-benchmark. Metalsmith.use() wrapper bat gehitu.
 - [ ] CLI
 - [ ] GUI
