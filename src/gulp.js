@@ -253,6 +253,40 @@ module.exports = function (gulp, config) {
                 .pipe(ghPages());
         });
 
+    } else if (config.deploy.type == 'local') {
+        gulp.task('upload', function (done) {
+            var inquirer = require('inquirer');
+            var isOutsideRegex = new RegExp('^'+ config.paths.base);
+            var localPath, isOutsideProject;
+
+            if (path.isAbsolute(config.deploy.config.path)) {
+                localPath = config.deploy.config.path;
+            } else {
+                localPath = path.normalize(path.join(config.paths.lamia, config.deploy.config.path));
+            }
+
+            isOutsideProject = !isOutsideRegex.test(localPath);
+
+            inquirer.prompt([{
+                type:    'confirm',
+                name:    'continue',
+                message: 'The deploy path "'+ localPath +'" is outside the project path and will be deleted. Shall we continue?',
+                when:    isOutsideProject,
+            }]).then(function (answers) {
+                if (isOutsideProject && !answers.continue) {
+                    return done();
+                }
+
+                del(localPath, { force: true }).then(function () {
+                    gulp.src('**/*', { cwd: config.paths.build })
+                        .pipe(gulp.dest(localPath))
+                        .on('end', done);
+                });
+            }).catch(err => {
+                console.log(err);
+                done();
+            });
+        });
     } else {
         gulp.task('upload', () => {});
     }

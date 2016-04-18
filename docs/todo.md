@@ -9,6 +9,7 @@ It uses GraphicsMagick.
 TODO:
 - [ ] Deploy:
     - [X] Amazon S3+sync
+    - [X] Local Folder
     - [ ] GitHub pages
         - Base URL? http://grautonomia.github.io/web/ que funcione en local y en GitHub.
         - Puede ser tambien en: http://grautonomia.github.io
