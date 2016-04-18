@@ -12,12 +12,18 @@ TODO:
     - [X] Local Folder
     - [ ] GitHub pages
         - Base URL? http://grautonomia.github.io/web/ que funcione en local y en GitHub.
-        - Puede ser tambien en: http://grautonomia.github.io
+        - Puede ser tambien en: http://grautonomia.github.io (en caso de usuario)
     - [ ] FTP+rsync
     - [ ] SSH+rsync
+- [ ] Nola in paginazioa, Mingo Query bat N paginatan bihurtu
+- [ ] YAML/JSONak erabiltzeko aukera MDiak berren. Azken finian dana JSONea bihurtze da
+- [ ] Hizkuntzak txekeatu:
+    - Bazekat "data/file.yml" eukitzia ta hori defektuzko hizkuntza asignatzia
+    - "data/file.yml" eta "file_es.yml"?
+- [ ] Filename "datetime" ere ignoratzia ziok eta barruan propiedade bezela erabiltzia?
 - [ ] config.yml mailan URLia i18n-eko aukera eon berko zian
 - [ ] Nik tuneautako paketiak berriro gehitu, adib.: `metalsmith-slug`
-- [ ] Watch debounce/throotle.
+- [ ] Watch debounce/throotle. Edo build-a geratu eta beste bat hasi? Queue?
 - [ ] Meta/SocialImages/Disqus/Analytics temantzat Mixin/Helper batzuk sortu?
 - [ ] console.log => debug = require('debug')('lamia')
 - [ ] reload on config.yml change
