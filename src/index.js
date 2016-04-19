@@ -40,6 +40,7 @@ function LamiaRegistry(projectDir, deployConfig) {
     config.paths.content = path.join(config.paths.base, 'content');
     config.paths.build = path.join(config.paths.tmp, 'build');
     config.paths.pre_build = path.join(config.paths.tmp, 'pre-build');
+    config.paths.lamia = path.join(config.paths.base, 'lamia');
     config.paths.source = path.join(config.paths.base, 'lamia/source');
     config.paths.project_metalsmith = path.join(config.paths.base, 'lamia/source/metalsmith.js');
 
