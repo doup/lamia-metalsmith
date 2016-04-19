@@ -13,9 +13,8 @@ TODO:
     - [ ] GitHub pages
         - Base URL? http://grautonomia.github.io/web/ que funcione en local y en GitHub.
         - Puede ser tambien en: http://grautonomia.github.io (en caso de usuario)
-    - [ ] FTP+rsync
-    - [ ] SSH+rsync
-- [ ] Nola in paginazioa, Mingo Query bat N paginatan bihurtu
+- [ ] Nola in paginazioa, Mingo Query bat N paginatan bihurtu (`metalsmith-paginator` o `metalsmith-mingo-paginate`?)
+    - Holako zoze: https://github.com/blakeembrey/metalsmith-pagination
 - [ ] YAML/JSONak erabiltzeko aukera MDiak berren. Azken finian dana JSONea bihurtze da
 - [ ] Hizkuntzak txekeatu:
     - Bazekat "data/file.yml" eukitzia ta hori defektuzko hizkuntza asignatzia
